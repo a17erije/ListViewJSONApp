@@ -36,13 +36,13 @@ import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
 
-    Mountain[] theMountains = new Mountain[9];
-    Integer[] mountainHeights = new Integer[9];
-    Integer[] mountainIds = new Integer[9];
-    String[] mountainNames = new String[9];
-    String[] mountainLocations = new String[9];
-    String[] mountainImageURLs = new String[9];
-    String[] mountainWikiURLs = new String[9];
+    Mountain[] theMountains = new Mountain[20];
+    Integer[] mountainHeights = new Integer[20];
+    Integer[] mountainIds = new Integer[20];
+    String[] mountainNames = new String[20];
+    String[] mountainLocations = new String[20];
+    String[] mountainImageURLs = new String[20];
+    String[] mountainWikiURLs = new String[20];
 
 
     @Override
@@ -171,7 +171,13 @@ public class MainActivity extends AppCompatActivity {
                     mountainWikiURLs[i] = theMountains[i].getWikiURL();
                 }
 
-                ArrayAdapter adapter = new ArrayAdapter(getApplicationContext(), R.layout.list_item,R.id.my_item_listview,mountainNames);
+                String[] mountainNamesList = new String[webMountains.length()];
+
+                for (int i = 0; i < webMountains.length(); i++ ) {
+                    mountainNamesList[i] = mountainNames[i];
+                }
+
+                ArrayAdapter adapter = new ArrayAdapter(getApplicationContext(), R.layout.list_item,R.id.my_item_listview,mountainNamesList);
 
                 ListView myListView = (ListView)findViewById(R.id.my_listview);
                 myListView.setAdapter(adapter);
