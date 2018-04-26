@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">a17erije Assignment 4</string>
     <string name="testString">Mount Shoehorn</string>
+    <string name="action_refresh">Refresh</string>
 </resources>

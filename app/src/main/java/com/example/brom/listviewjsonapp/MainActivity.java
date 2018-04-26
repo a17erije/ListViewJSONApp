@@ -5,6 +5,9 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -44,13 +47,41 @@ public class MainActivity extends AppCompatActivity {
     String[] mountainImageURLs = new String[20];
     String[] mountainWikiURLs = new String[20];
 
+    String[] placeholderMountain = new String[11];
+
+    ArrayAdapter adapter;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inf = getMenuInflater();
+        inf.inflate(R.menu.themenu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.action_refresh) {
+            new FetchData().execute();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        for (int i = 0; i < placeholderMountain.length; i++)
+            placeholderMountain[i] = "Mount Shoehorn";
+
+        adapter = new ArrayAdapter(getApplicationContext(), R.layout.list_item,R.id.my_item_listview,placeholderMountain);
+
+        ListView myListView = (ListView)findViewById(R.id.my_listview);
+        myListView.setAdapter(adapter);
+
         new FetchData().execute();
+
 
  /*       for (int i = 0; i < theMountains.length; i++) {
             theMountains[i] = new Mountain();
@@ -177,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
                     mountainNamesList[i] = mountainNames[i];
                 }
 
-                ArrayAdapter adapter = new ArrayAdapter(getApplicationContext(), R.layout.list_item,R.id.my_item_listview,mountainNamesList);
+                adapter = new ArrayAdapter(getApplicationContext(), R.layout.list_item,R.id.my_item_listview,mountainNamesList);
 
                 ListView myListView = (ListView)findViewById(R.id.my_listview);
                 myListView.setAdapter(adapter);
