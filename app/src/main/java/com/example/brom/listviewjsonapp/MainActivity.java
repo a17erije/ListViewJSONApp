@@ -24,6 +24,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 
 // Create a new class, Mountain, that can hold your JSON data
@@ -39,15 +41,10 @@ import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
 
-    Mountain[] theMountains = new Mountain[20];
-    Integer[] mountainHeights = new Integer[20];
-    Integer[] mountainIds = new Integer[20];
-    String[] mountainNames = new String[20];
-    String[] mountainLocations = new String[20];
-    String[] mountainImageURLs = new String[20];
-    String[] mountainWikiURLs = new String[20];
 
-    String[] placeholderMountain = new String[11];
+    List<Mountain> theMountains = new ArrayList<Mountain>();
+
+
 
     ArrayAdapter adapter;
 
@@ -72,15 +69,27 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        for (int i = 0; i < placeholderMountain.length; i++)
-            placeholderMountain[i] = "Mount Shoehorn";
 
-        adapter = new ArrayAdapter(getApplicationContext(), R.layout.list_item,R.id.my_item_listview,placeholderMountain);
+
+        adapter = new ArrayAdapter(getApplicationContext(), R.layout.list_item,R.id.my_item_listview,theMountains);
 
         ListView myListView = (ListView)findViewById(R.id.my_listview);
         myListView.setAdapter(adapter);
 
         new FetchData().execute();
+
+        myListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Mountain m = theMountains.get(position);
+                Toast.makeText(getApplicationContext(), adapterView.getItemAtPosition(position) + " is " + m.getHeight() + " meters tall and its location is: " + m.getLocation(), Toast.LENGTH_SHORT).show();
+                //Intent myIntent = new Intent(view.getContext(),MountainDetailsActivity.class);
+                //myIntent.putExtra("mountainName", mountainNames[position]);
+                //myIntent.putExtra("mountainHeight", mountainHeights[position]);
+                //myIntent.putExtra("mountainLocation", mountainLocations[position]);
+                //startActivityForResult(myIntent,0);
+            }
+        });
 
 
  /*       for (int i = 0; i < theMountains.length; i++) {
@@ -187,42 +196,16 @@ public class MainActivity extends AppCompatActivity {
             super.onPostExecute(o);
             try {
                 JSONArray webMountains = new JSONArray(o);
+                adapter.clear();
 
                 for (int i = 0; i < webMountains.length(); i++) {
-                    theMountains[i] = new Mountain();
                     JSONObject webMountain = webMountains.getJSONObject(i);
-                    theMountains[i].setHeight(webMountain.getInt("size"));
-                    theMountains[i].setName(webMountain.getString("name"));
-                    theMountains[i].setLocation(webMountain.getString("location"));
-                    mountainHeights[i] = theMountains[i].getHeight();
-                    mountainIds[i] = theMountains[i].getId();
-                    mountainImageURLs[i] = theMountains[i].getImageURL();
-                    mountainLocations[i] = theMountains[i].getLocation();
-                    mountainNames[i] = theMountains[i].getName();
-                    mountainWikiURLs[i] = theMountains[i].getWikiURL();
+                    Integer Height = webMountain.getInt("size");
+                    String Name = webMountain.getString("name");
+                    String Location = webMountain.getString("location");
+                    Mountain m = new Mountain(Name,Location,Height);
+                    adapter.add(m);
                 }
-
-                String[] mountainNamesList = new String[webMountains.length()];
-
-                for (int i = 0; i < webMountains.length(); i++ ) {
-                    mountainNamesList[i] = mountainNames[i];
-                }
-
-                adapter = new ArrayAdapter(getApplicationContext(), R.layout.list_item,R.id.my_item_listview,mountainNamesList);
-
-                ListView myListView = (ListView)findViewById(R.id.my_listview);
-                myListView.setAdapter(adapter);
-                myListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                        Toast.makeText(getApplicationContext(), adapterView.getItemAtPosition(position) + " is " + mountainHeights[position] + " meters tall and its location is: " + mountainLocations[position], Toast.LENGTH_SHORT).show();
-                        //Intent myIntent = new Intent(view.getContext(),MountainDetailsActivity.class);
-                        //myIntent.putExtra("mountainName", mountainNames[position]);
-                        //myIntent.putExtra("mountainHeight", mountainHeights[position]);
-                        //myIntent.putExtra("mountainLocation", mountainLocations[position]);
-                        //startActivityForResult(myIntent,0);
-                    }
-                });
             } catch (JSONException e) {
                 e.printStackTrace();
             }

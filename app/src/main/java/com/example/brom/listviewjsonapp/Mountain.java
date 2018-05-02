@@ -12,6 +12,18 @@ public class Mountain {
     String imageURL = "https://ind5.ccio.co/lE/E2/YB/f9c0c455cabb8299943074a4cf54e57a.jpn";
     String wikiURL = "https://www.youtube.com/watch?v=T0Wd0eXZTWk";
 
+
+    public Mountain(String inname, String inlocation, Integer inheight) {
+        setName(inname);
+        setLocation(inlocation);
+        setHeight(inheight);
+    }
+
+    @Override
+    public String toString() {
+        return getName();
+    }
+
     public void setHeight(Integer height) {
         this.height = height;
     }
